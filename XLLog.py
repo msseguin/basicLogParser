@@ -19,7 +19,7 @@ class XLLog:
 
     # DEBUG VARIABLES
     # declare something to search for
-    searchString = "2021-06-02 15:10:26"
+    search_string = "2021-06-02 15:10:26"
 
     # variable for the log file name, read as utf-16, and look for the windows newline
     log_file_name = "LogFile.log"
@@ -28,6 +28,9 @@ class XLLog:
 
     # variable for the log file name
     error_log_file_name = "LogFileErrors.txt"
+    
+    # variables for other properties
+    line_number=0
     
 
     # def __init__(self,log_file_name, decode_format, new_line, error_log_file_name):
@@ -40,35 +43,35 @@ class XLLog:
 
 
 
-    def search_lines(self):
+    def search_lines(self,search_string):
         # open the file
         with open(self.log_file_name, self.READONLYMODE, encoding=self.decode_format, newline = self.new_line) as fileHandler:
             # read in a line at a time, discard if not useful
-            currentLine = fileHandler.readline()
+            current_line = fileHandler.readline()
 
             # count all the lines, create a string to hold
-            lineNumber = 0
-            allErrors = []
+            line_number = 0
+            all_errors = []
 
-            while currentLine:
-                lineNumber += 1
+            while current_line:
+                line_number += 1
 
                 # see if it has error in it, if not discard
                 # if it is an error, grab the next line too (hold information)
-                if currentLine.find(searchString) != -1:
-                    allErrors.append("[" + str(lineNumber) + "]  " + str(currentLine))
+                if current_line.find(search_string) != -1:
+                    all_errors.append("[" + str(line_number) + "]  " + str(current_line))
                 
                 # read in the next line in and loop
                 try:
-                    currentLine = fileHandler.readline()
-                except:
-                    print("[" + str(lineNumber) + "] is not readable")
+                    current_line = fileHandler.readline()
+                except BaseException as e:
+                    print("[" + str(line_number) + "] is not readable")
 
             
     # def write_results(results):
     # create a new file to output to
     # write all the lines
-    def write_results(results):
+    def write_results(self,results):
         with open(self.error_log_file_name, self.WRITEMODE,encoding=self.decode_format) as fileWriteHandler:
             for line in results:
                 fileWriteHandler.write(str(line))
@@ -76,7 +79,7 @@ class XLLog:
 
     # def print_lines_log(lines)
     # print it out to the console
-    def print_lines_log(lines):
+    def print_lines_log(self,lines):
         for line in lines:
             print(line)
 
@@ -91,6 +94,7 @@ class XLLog:
         # read in a line at a time, discard if not useful
 
             current_line = fileHandler.readline()
+            lines = []
 
             # count all the lines, create a string to hold
             line_number = 0
@@ -98,9 +102,15 @@ class XLLog:
             while line_count > line_number and current_line:
                 line_number += 1
 
+                lines.append("[" + str(line_number) + "]  " + str(current_line))
+
                 # read in the next line in and loop
                 try:
                     current_line = fileHandler.readline()
-                except:
-                    print("[" + str(lineNumber) + "] is not readable")
+                except BaseException as e:
+                    print("[" + str(line_number) + "] is not readable")
+
+                
+
+        return lines
             
