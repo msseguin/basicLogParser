@@ -4,9 +4,11 @@
 #
 # Author:     Marcel Seguin
 # Date:       07-April-2021
+# Updated:    21-August-2022
 
 
 from distutils.log import error
+from re import search
 
 
 # class XLLog:
@@ -66,12 +68,15 @@ class XLLog:
                     current_line = fileHandler.readline()
                 except BaseException as e:
                     print("[" + str(line_number) + "] is not readable")
+        
+        return all_errors
 
             
     # def write_results(results):
     # create a new file to output to
     # write all the lines
-    def write_results(self,results):
+    def write_results(self,search_string):
+        results = self.search_lines(search_string)
         with open(self.error_log_file_name, self.WRITEMODE,encoding=self.decode_format) as fileWriteHandler:
             for line in results:
                 fileWriteHandler.write(str(line))
@@ -79,7 +84,10 @@ class XLLog:
 
     # def print_lines_log(lines)
     # print it out to the console
-    def print_lines_log(self,lines):
+    def print_lines_log(self,line_count):
+
+        lines = self.read_first_x_lines(line_count)
+
         for line in lines:
             print(line)
 
